@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercício 3 - Formulário de Contato</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      padding: 30px;
+    }
+    .form-box {
+      max-width: 400px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    textarea { height: 80px; resize: vertical; }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { background-color: #218838; }
+    .resultado-box {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #e9ecef;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h2>Formulário de Contato</h2>
+    
+    <form id="formContato">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome">
+      </div>
+      <div class="form-group">
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" placeholder="Digite sua mensagem"></textarea>
+      </div>
+      <button type="button" id="btnEnviar">Enviar Dados</button>
+    </form>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    const inputNome = document.getElementById("nome");
+    const inputMensagem = document.getElementById("mensagem");
+    const btnEnviar = document.getElementById("btnEnviar");
+    const divResultado = document.getElementById("resultado");
+
+    inputNome.value = localStorage.getItem("rascunho_nome") || "";
+    inputMensagem.value = localStorage.getItem("rascunho_mensagem") || "";
+
+    inputNome.addEventListener("input", () => {
+      localStorage.setItem("rascunho_nome", inputNome.value);
+    });
+
+    inputMensagem.addEventListener("input", () => {
+      localStorage.setItem("rascunho_mensagem", inputMensagem.value);
+    });
+
+    btnEnviar.addEventListener("click", () => {
+      const contatoObj = {
+        nome: inputNome.value,
+        mensagem: inputMensagem.value
+      };
+
+      sessionStorage.setItem("contatoEnviado", JSON.stringify(contatoObj));
+
+      localStorage.removeItem("rascunho_nome");
+      localStorage.removeItem("rascunho_mensagem");
+
+      exibirDadosEnviados();
+    });
+
+    function exibirDadosEnviados() {
+      const dadosJSON = sessionStorage.getItem("contatoEnviado");
+      if (dadosJSON) {
+        const objetoJS = JSON.parse(dadosJSON);
+        divResultado.innerHTML = `
+          <div class="resultado-box">
+            <h4>Dados Enviados (do sessionStorage):</h4>
+            <p><strong>Nome:</strong> ${objetoJS.nome}</p>
+            <p><strong>Mensagem:</strong> ${objetoJS.mensagem}</p>
+          </div>
+        `;
+      }
+    }
+
+    exibirDadosEnviados();
+  </script>
+</body>
+</html>

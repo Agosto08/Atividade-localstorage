@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercício 4 - Monitor de Abas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f0f4f8;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    input {
+      padding: 8px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 8px 12px;
+      background-color: #17a2b8;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .alerta {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      border-radius: 4px;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sincronização de Abas</h2>
+    <p>Abra esta página em duas abas lado a lado.</p>
+
+    <div>
+      <input type="text" id="campoTexto" placeholder="Escreva algo...">
+      <button onclick="salvarDado()">Atualizar</button>
+    </div>
+
+    <div class="alerta">
+      <strong>Painel de Notificação:</strong>
+      <p id="notificacao">Nenhuma alteração de outra aba detectada.</p>
+    </div>
+  </div>
+
+  <script>
+    function salvarDado() {
+      const valor = document.getElementById("campoTexto").value;
+      localStorage.setItem("mensagemCompartilhada", valor);
+    }
+
+    window.addEventListener("storage", function(event) {
+      const divNotificacao = document.getElementById("notificacao");
+      divNotificacao.innerHTML = `
+        <strong>Chave:</strong> ${event.key} <br>
+        <strong>Valor anterior:</strong> ${event.oldValue || "Vazio"} <br>
+        <strong>Novo valor:</strong> ${event.newValue}
+      `;
+    });
+  </script>
+</body>
+</html>

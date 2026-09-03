@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercício 2 - Carrinho de Compras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .produtos-btn {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+    .btn-limpar { background-color: #dc3545; }
+    .btn-limpar:hover { background-color: #a71d2a; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: #f1f1f1;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-remover {
+      background-color: #ff4d4d;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Carrinho de Compras</h2>
+    
+    <div class="produtos-btn">
+      <button onclick="adicionarProduto('Camiseta')">+ Camiseta</button>
+      <button onclick="adicionarProduto('Tênis')">+ Tênis</button>
+      <button onclick="adicionarProduto('Calça')">+ Calça</button>
+    </div>
+
+    <h3>Itens no Carrinho:</h3>
+    <ul id="listaCarrinho"></ul>
+    <button class="btn-limpar" onclick="limparCarrinho()">Limpar Carrinho</button>
+  </div>
+
+  <script>
+    function obterCarrinho() {
+      const dados = sessionStorage.getItem("carrinho");
+      return dados ? JSON.parse(dados) : [];
+    }
+
+    function atualizarTela() {
+      const carrinho = obterCarrinho();
+      const lista = document.getElementById("listaCarrinho");
+      lista.innerHTML = "";
+
+      carrinho.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        
+        const btnRemover = document.createElement("button");
+        btnRemover.textContent = "Remover";
+        btnRemover.className = "btn-remover";
+        btnRemover.onclick = () => removerProduto(index);
+
+        li.appendChild(btnRemover);
+        lista.appendChild(li);
+      });
+    }
+
+    function adicionarProduto(produto) {
+      const carrinho = obterCarrinho();
+      carrinho.push(produto);
+      sessionStorage.setItem("carrinho", JSON.stringify(carrinho));
+      atualizarTela();
+    }
+
+    function removerProduto(index) {
+      const carrinho = obterCarrinho();
+      carrinho.splice(index, 1);
+      sessionStorage.setItem("carrinho", JSON.stringify(carrinho));
+      atualizarTela();
+    }
+
+    function limparCarrinho() {
+      sessionStorage.removeItem("carrinho");
+      atualizarTela();
+    }
+
+    atualizarTela();
+  </script>
+</body>
+</html>
